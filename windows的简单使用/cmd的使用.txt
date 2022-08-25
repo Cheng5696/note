@@ -1,0 +1,10 @@
+chkdsk、sfc、ftp，net
+
+**echo**  
+```cmd
+echo shutdown /s /t 0 >>关机.bat
+//是在当前目录下创建一个名为关机.bat的文档，在这个文本文档中输入0秒后关机的命令。
+
+taskkill /f /im wscript.exe
+//关闭vbscript窗口
+```

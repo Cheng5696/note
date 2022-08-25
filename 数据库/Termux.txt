@@ -57,18 +57,21 @@ rm -i symlinkfile2 symlinkfile3
 
 ```
 
-**git的使用** 
+**git的使用**
 ``` 
+//配置与安装
+
+1. 安装和配置ssh
 pkg install git  //利用pkg安装git
 git --version  // 查看版本
 ssh-keygen -t rsa -C "2278246480@qq.com.com"   //生成ssh公钥
 
 
-//查看ssh公钥，并保存
+2. 查看ssh公钥，并保存
 cd ~/.ssh
 cat id_rsa.pub
 
-//ssh密钥
+//ssh公钥
 ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC6DnNVDxAOflpDCkJTq1FkXddd/FS/MGa9s2MDgppnRFipzZEhx06gOI/wNlRKvhX5esj41YQTy4aDuoWahrfY1qmo1CtjUCCFl6i35yvYS/F7x5S3Q/cxWLXTWgeQbA1KgerP5vX0VCcEtt5tUFFjWGUu7lJd0k0nOlwLduiglDIxIenhv7rZTIz0Tfym+19PHVEKauXwN5tGA/MF7I8fUXvP5x2guyDWxl81hAxNEYHQkcGSqV/nAguVNZ8fK9ATyHypyx+r4lhedxYNiaNANUlWM8oJQsFw9Gst1RUoIuNY6R5sgR+6CxGPdN7sAqS8ggW6r7hobsYkCepneF148wSnjamFDLAISIqlFTki21U9KoiCypa1xJvSM+oU31AgXDusecDw2C2AIPoEFFtpOmzcQ2bKQ+DKYRXCL7QS7kBe6Pftc0pSKcBWcMH8/ERxS2OgVUooy3znkjGZlASN0r8OhqdL18XeuAzLJFe2PSZvzv5a4OGGZabNbJ9E+ws= 2278246480@qq.com.com
 
 //克隆库
@@ -93,8 +96,63 @@ git config --global --add safe.directory "*"
 4. 输入git commit -m "first commit"，表示你对这次提交的注释，双引号里面的内容可以根据个人的需要
 5. 输入git remote add origin https://自己的仓库url地址（上面有说到） 将本地的仓库关联到github上。
 6. 输入git push -u origin master，这是把代码上传到github仓库的意思。
+
+// 再次上传代码
+1. git add .  提交暂存区
+2. git commit -m "first commit"  //提交本地库
+3. git push -u origin master  //提交远程库
+
+// 查看状态
+git status  查看工作区，缓存区状态
+    1.红色字没有添加到缓存区
+    2.绿字添加到缓存区，还没提交（工作区，缓存区内容一至）
+
+// 版本控制
+1. git log  查看历史版本
+   1. HEAD是指针，指向当前的版本
+   2. git log --pretty=oneline  一行内显示历史版本
+   3. git reflog   查看历史记录，显示移动步数
+
+2. 版本前进或后退
+   1. git reset --hard hash索引值  //版本更改，可以只写一小部分索引值
+--soft 仅仅只在本地库移动HEAD指针      缓存区会变绿是因为本地库变了，暂存区没变所以不一样了。
+--mixed 在本地库移动HEAD指针,并且会重置缓存区     缓存区变红，因为工作区没变，但本地库和暂存区版本后退了。
+--hard  在本地库移动HEAD指针,，重置缓存区和工作区1
+
+// 比较文件差异
+git diff     //将所有文件与它的本地库比较
+git diff HEAD    //工作区与本地库当前版本比较
+
+// 分支管理
+1. git branch -v     //查看所有分支
+2. git branch xx     //创建分支
+3. git checkout xx   //切换分支
+4. 合并分支
+   1. 切换到增加内容的分支上
+   2. git merge 分支名
+   3. 解决合并冲突
+      1. 在文件里删除特殊符号，并手动修改
+      2. git add xxx.txt
+      3. git commit -m"日志信息"   （不能带具体文件名）
+
+// 远程库操作
+1. push操作
+   1. git remote -v    //查看所有地址别名
+   2. git remote add origin https://github.com/Cheng5696/xuexi.git   //新建别名
+   3. git push origin master  //本地库推送到远程库的某分支
+
+2. clone操作
+clone自动完成了 1.完整把远程库下载到本地  2.创建origin远程库别名  3.初始化本地库
+
+git clone https://github.com/Cheng5696/xuexi.git  //克隆远程库到本地库
+
+
+
 ```
-![image](images/20200727111635571.png)
+1. git上传流程
+本地库 -> 远程库
+![image](images/big-thumbnail-1659798605855-clipboard.png)
+
 
 ## 其他问题
 **内存占用**  

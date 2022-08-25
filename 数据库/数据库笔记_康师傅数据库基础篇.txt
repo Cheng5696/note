@@ -1,0 +1,173 @@
+## 学习环境搭建和简单使用
+**termux 里 mysql 环境的搭建**  
+
+```
+// 1. 安装
+pkg install mariadb
+
+
+// 2. 查看是否安装成功
+% mysql --version
+mysql  Ver 15.1 Distrib 10.6.7-MariaDB, for Android (aarch64) using  EditLine wrapper
+
+// 3. 初始化数据库（新版本自动初始化）
+mysql_install_db
+
+// 4. 启动mysql服务
+% nohup mysqld &
+[1] 25595  //进程的PID号
+nohup mysqld &nohup: ignoring input and appending output to 'nohup.out'
+
+// 5. 查看进程PID
+ps aux|grep mysql
+
+// 6. 停止mysql服务
+kill -9 PID
+kill -9 `pgrep mysql`
+
+// 7. 登录mysql
+mysql -u root
+mysql -u $(whoami)
+
+// 8. 切换mysql目录
+cd ~/../usr/var/lib/mysql
+
+// 9. 修改root密码
+mysql -u $(whoami)  //登录
+use mysql;
+set password for 'root'@'localhost' = password('123');
+flush privileges;  //刷新权限
+quit;
+
+// 10.使用root登录
+mysql -u root -p
+
+```
+**mysql的简单使用**  
+```
+//查看mysql版本
+mysql --version
+
+//退出mysql
+quit          //退出mysql
+
+//查看所有数据库
+show databases;  
+
+// 导入数据库
+mysql> source /data/data/com.termux/files/home/storage/shared/A-book/atguigudb.sql
+
+//创造数据库
+create database 数据库名;   
+
+//使用自己的数据库
+use 数据库名;      
+
+//查看表格
+show tables;   //要求前面有use语句
+show tables from 数据库名;
+
+//创造表格
+create table 表名称(
+字段名  数据类型,
+字段名 数据类型
+);
+
+//查看表的数据
+select * from 数据库表名称;
+
+//添加记录
+insert into 表名称 values(值列表);
+insert into student values(1,'张三');
+
+//查看表的创建信息
+show create table 表名称\G
+
+//查看数据库的创建信息
+show create database 数据库名\G
+
+//删除表格
+drop table 表名称;
+
+//删除数据库
+drop database 数据库名;
+```
+
+## 基础知识
+**sql的分类**  
+SQL语言在功能上主要分为如下3大类：
+1. DDL（Data Definition Languages、数据定义语言）
+   1. 这些语句定义了不同的数据库、表、视图、索引等数据库对象，还可以用来创建、删除、修改数据库和数据表的结构。
+   2. 主要的语句关键字包括`CREATE`、`DROP`、`ALTER`等。
+
+2. DML（Data Manipulation Language、数据操作语言）
+   1. 用于添加、删除、更新和查询数据库记录，并检查数据完整性。
+   2. 主要的语句关键字包括`INSERT`、`DELETE`、`UPDATE`、`SELECT`等。
+   3. SELECT是SQL语言的基础，最为重要。
+
+3. DCL（Data Control Language、数据控制语言）
+   1. 用于定义数据库、表、字段、用户的访问权限和安全级别。
+   2. 主要的语句关键字包括`GRANT`、`REVOKE`、`COMMIT`、`ROLLBACK`、`SAVEPOINT`等。
+
+**sql语言的规则**  
+1. SQL 可以写在一行或者多行。为了提高可读性，各子句分行写，必要时使用缩进
+2. 每条命令以 ; 或 \g 或 \G 结束
+3. 字符串型和日期时间类型的数据可以使用单引号（' '）表示
+4. 列的别名，尽量使用双引号（" "），而且不建议省略as
+5. windows下不区分大小写，linux下区分大小写，避免bug所以建议。
+   1. 数据库名、表名、表别名、字段名、字段别名等都小写。
+   2. SQL 关键字、函数名、绑定变量等都大写
+
+**注释**  
+```sql
+# 单行注释
+-- 单行注释
+/* 多行注释*/
+```
+
+
+## SELECT
+**最基本的SELECT语句，生成基本的结果集**  
+```sql
+1. 伪表
+select 1  
+select 1 from dual  //dual是伪表，和上一句相同。
+
+2. 最基本的查询
+select 字段1，字段2 from 表名；
+
+3. 查看表中所有字段
+select * from 表名称;
+
+4. 列的别名
+# 为结果集（查询结果返回的表）的字段重命名。
+# 三种方式起别名1.空格 2.as 3.""
+select employee_id emp_id,last_name AS lname,department_id "dp id"
+from employees;
+
+5. 去除重复行
+# 尽量单独字段使用，将该字段重复的行只保留一个。
+select DISTINCT employee_id 
+from employees;
+
+# 对employee_id ,last_name两个字段整体进行去重，没有意义。
+SELECT DISTINCT employee_id ,last_name 
+FROM employees;
+
+6. 空值null参与运算
+   1. 空值null 不等同于 0, ""
+   2. 空值参与运算结果一定也为null
+
+7. 着重号`
+# 当表名和关键字重复，使用表名时加着重号
+SELECT * From FROM `order`
+
+8. 查询常数
+# 自动为每一行都匹配常数(为查询结果集添加一个字段，该字段每一行都匹配该常数)
+SELECT 'chengcheng'，123，employee_id
+FROM employees
+
+9. 显示表结构(显示表中字段的详细信息)
+DESCRIBE employees;
+DESC employees;
+```
